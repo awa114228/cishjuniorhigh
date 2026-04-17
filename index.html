@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>君毅中學國中部 - 官方入口網站</title>
+    <!-- 標題已更新 -->
+    <title>苗栗縣私立君毅高級中學國中部資訊網</title>
+    
     <!-- 載入必要套件 -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -13,28 +15,32 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
         
-        /* 防止 React 載入前的內容閃爍 (FOUC) */
-        [v-cloak], [type="text/babel"] { display: none; }
+        [type="text/babel"] { display: none; }
         
         body { 
             font-family: 'Noto Sans TC', sans-serif; 
             scroll-behavior: smooth;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
 
         .feature-card {
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .feature-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
         }
+
+        /* 側邊欄抽屜動畫 */
+        .mobile-menu-transition {
+            transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
     </style>
 </head>
 <body>
-    <!-- React 掛載點 -->
     <div id="root"></div>
 
     <script type="text/babel">
@@ -43,14 +49,13 @@
         function App() {
             const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-            // 當選單狀態改變或初始載入時，更新 Lucide 圖示
+            // 確保每次開啟選單後，Lucide 圖示都能重新渲染
             useEffect(() => {
                 if (window.lucide) {
                     window.lucide.createIcons();
                 }
             }, [isMenuOpen]);
 
-            // 連結設定
             const SCHOOL_URL = "https://www.cish.mlc.edu.tw/";
             const JUNIOR_GRADES_URL = "https://school.cish.mlc.edu.tw/online_jnr/";
             const HANLIN_CLOUD_URL = "https://chun-i.teams.com.tw/v2/login.html";
@@ -72,13 +77,13 @@
                                 <div className="text-blue-800 flex-shrink-0">
                                     <i data-lucide="graduation-cap" className="w-10 h-10"></i>
                                 </div>
-                                <div className="ml-3">
+                                <div className="ml-3 text-left">
                                     <span className="block text-xl font-bold text-blue-900 leading-none">君毅中學 <span className="text-blue-600">國中部</span></span>
                                     <span className="block text-[10px] text-gray-400 uppercase tracking-widest mt-1">Junior High School</span>
                                 </div>
                             </div>
                             
-                            {/* 桌面選單 */}
+                            {/* 桌面版導覽按鈕 */}
                             <div className="hidden md:flex items-center space-x-8 font-bold text-gray-600">
                                 <a href="#features" className="hover:text-blue-700 transition-colors">特色課程</a>
                                 <a href="#news" className="hover:text-blue-700 transition-colors">最新公告</a>
@@ -90,28 +95,65 @@
                                 </a>
                             </div>
 
-                            {/* 手機按鈕 */}
+                            {/* 手機版漢堡按鈕 */}
                             <div className="md:hidden">
-                                <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-gray-600 focus:outline-none">
-                                    <i data-lucide={isMenuOpen ? "x" : "menu"} className="w-8 h-8"></i>
+                                <button 
+                                    onClick={() => setIsMenuOpen(true)} 
+                                    className="p-2 text-gray-600 focus:outline-none"
+                                >
+                                    <i data-lucide="menu" className="w-8 h-8"></i>
                                 </button>
                             </div>
                         </div>
                     </nav>
 
-                    {/* 手機版選單抽屜 */}
-                    {isMenuOpen && (
-                        <div className="fixed inset-0 z-[49] bg-white pt-24 px-6 md:hidden">
-                            <div className="flex flex-col space-y-6 text-xl font-bold text-gray-800">
-                                <a href="#features" onClick={() => setIsMenuOpen(false)} className="border-b border-gray-100 pb-4">特色課程</a>
-                                <a href="#news" onClick={() => setIsMenuOpen(false)} className="border-b border-gray-100 pb-4">最新公告</a>
-                                <a href={SCHOOL_URL} target="_blank" className="border-b border-gray-100 pb-4 flex items-center justify-between">學校首頁 <i data-lucide="external-link"></i></a>
-                                <a href={ADMISSION_URL} target="_blank" className="bg-blue-700 text-white text-center py-4 rounded-2xl shadow-lg">新生報名專區</a>
+                    {/* 手機版側邊漢堡選單 */}
+                    <div className={`fixed inset-0 z-[100] transition-opacity duration-300 ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}></div>
+                        <div className={`absolute right-0 top-0 h-full w-72 bg-white shadow-2xl mobile-menu-transition ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                            <div className="p-6 flex justify-between items-center border-b">
+                                <span className="font-black text-blue-900 text-lg tracking-tight">資訊導覽</span>
+                                <button onClick={() => setIsMenuOpen(false)} className="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                                    <i data-lucide="x" className="w-6 h-6"></i>
+                                </button>
+                            </div>
+                            
+                            <div className="p-6 flex flex-col space-y-4">
+                                <a href="#features" onClick={() => setIsMenuOpen(false)} className="flex items-center space-x-3 text-gray-700 font-bold p-3 hover:bg-blue-50 rounded-xl transition-all">
+                                    <i data-lucide="sparkles" className="w-5 h-5 text-blue-600"></i>
+                                    <span>特色課程介紹</span>
+                                </a>
+                                <a href="#news" onClick={() => setIsMenuOpen(false)} className="flex items-center space-x-3 text-gray-700 font-bold p-3 hover:bg-blue-50 rounded-xl transition-all">
+                                    <i data-lucide="megaphone" className="w-5 h-5 text-blue-600"></i>
+                                    <span>國中最新公告</span>
+                                </a>
+                                <a href={SCHOOL_URL} target="_blank" className="flex items-center space-x-3 text-gray-700 font-bold p-3 hover:bg-blue-50 rounded-xl transition-all">
+                                    <i data-lucide="globe" className="w-5 h-5 text-blue-600"></i>
+                                    <span>進入學校首頁</span>
+                                </a>
+                                
+                                <div className="pt-6 border-t mt-4">
+                                    <p className="text-xs text-gray-400 font-bold uppercase mb-4 px-3 tracking-widest text-center">快捷服務</p>
+                                    <a href={JUNIOR_GRADES_URL} target="_blank" className="flex items-center space-x-3 text-gray-600 font-medium p-3 hover:bg-gray-50 rounded-xl transition-all mb-1">
+                                        <i data-lucide="search" className="w-5 h-5"></i>
+                                        <span>成績查詢系統</span>
+                                    </a>
+                                    <a href={HANLIN_CLOUD_URL} target="_blank" className="flex items-center space-x-3 text-gray-600 font-medium p-3 hover:bg-gray-50 rounded-xl transition-all">
+                                        <i data-lucide="book" className="w-5 h-5"></i>
+                                        <span>翰林雲端學院</span>
+                                    </a>
+                                </div>
+                                
+                                <div className="pt-8">
+                                    <a href={ADMISSION_URL} target="_blank" className="flex items-center justify-center w-full py-4 bg-blue-700 text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-all text-center">
+                                        新生專區報名入口
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    )}
+                    </div>
 
-                    {/* Hero 主視覺 */}
+                    {/* Hero Section */}
                     <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 bg-blue-900 text-white overflow-hidden">
                         <div className="max-w-7xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center">
                             <div className="md:w-3/5 text-center md:text-left mb-12">
@@ -122,7 +164,7 @@
                                     深耕品格塑造、機器人特色課程與雙語教學，提供苗栗學子最優質的國中教育環境。
                                 </p>
                                 <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-                                    <a href={ADMISSION_URL} target="_blank" className="bg-amber-400 text-blue-950 px-10 py-4 rounded-full font-black text-lg shadow-xl hover:bg-amber-300 transition-all active:scale-95">
+                                    <a href={ADMISSION_URL} target="_blank" className="bg-amber-400 text-blue-950 px-10 py-4 rounded-full font-black text-lg shadow-xl hover:bg-amber-300 transition-all active:scale-95 text-center">
                                         國中新生報名
                                     </a>
                                     <a href="#features" className="border-2 border-white/30 text-white px-10 py-4 rounded-full font-black text-lg hover:bg-white/10 transition-all text-center">
@@ -136,19 +178,20 @@
                                     <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-white/50">
                                         <div className="flex items-center text-blue-900">
                                             <i data-lucide="clipboard-check" className="w-6 h-6 text-amber-500 mr-3 flex-shrink-0"></i>
-                                            <span className="font-bold text-base sm:text-lg whitespace-nowrap overflow-hidden text-ellipsis">國中會考錄取成效斐然</span>
+                                            <span className="font-bold text-base sm:text-lg">國中會考錄取成效斐然</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {/* 裝飾性背景 */}
                         <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-800/30 -skew-x-12 translate-x-20 opacity-50"></div>
                     </section>
 
-                    {/* 四大教學特色 */}
+                    {/* 教學特色區塊 */}
                     <section id="features" className="py-24 bg-gray-50">
-                        <div className="max-w-7xl mx-auto px-4">
-                            <div className="text-center mb-16">
+                        <div className="max-w-7xl mx-auto px-4 text-center">
+                            <div className="mb-16">
                                 <h2 className="text-3xl md:text-4xl font-black text-blue-900 mb-4 tracking-tight">四大教學支柱</h2>
                                 <div className="w-16 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
                             </div>
@@ -159,7 +202,7 @@
                                     { icon: "star", title: "品格教育", desc: "重視生活禮儀與責任感培養，導師全程關懷陪伴，帶領孩子穩健走過青春期。" },
                                     { icon: "users", title: "適性輔導", desc: "專業升學輔導團隊，採拔尖扶弱策略，精準掌握會考趨勢，成就每一位學子。" }
                                 ].map((f, i) => (
-                                    <div key={i} className="feature-card bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                                    <div key={i} className="feature-card bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-left">
                                         <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
                                             <i data-lucide={f.icon} className="w-7 h-7"></i>
                                         </div>
@@ -171,23 +214,23 @@
                         </div>
                     </section>
 
-                    {/* 最新公告 */}
+                    {/* 最新公告與連結 */}
                     <section id="news" className="py-24 bg-white">
                         <div className="max-w-4xl mx-auto px-4">
                             <div className="flex flex-col items-center mb-12 text-center">
-                                <h2 className="text-3xl font-black text-gray-900 mb-4">最新公告與榮譽榜</h2>
+                                <h2 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">最新公告與榮譽榜</h2>
                                 <a href={SCHOOL_URL} target="_blank" className="flex items-center text-blue-600 font-bold hover:underline">
-                                    進入學校官網查看更多 <i data-lucide="external-link" className="w-4 h-4 ml-1"></i>
+                                    進入學校官網查看完整資訊 <i data-lucide="external-link" className="w-4 h-4 ml-1"></i>
                                 </a>
                             </div>
                             <div className="space-y-4">
                                 {newsList.map(news => (
                                     <a key={news.id} href={SCHOOL_URL} target="_blank" className="flex flex-col sm:flex-row sm:items-center bg-gray-50 p-6 rounded-2xl hover:bg-blue-50 transition-colors group border border-transparent hover:border-blue-100">
-                                        <div className="flex items-center mb-2 sm:mb-0 sm:mr-6 flex-shrink-0">
+                                        <div className="flex items-center mb-2 sm:mb-0 sm:mr-6 flex-shrink-0 text-left">
                                             <span className="text-sm font-medium text-gray-400 w-24">{news.date}</span>
                                             <span className={`px-3 py-1 text-xs font-bold rounded-lg ${news.color}`}>{news.type}</span>
                                         </div>
-                                        <p className="text-gray-800 font-bold group-hover:text-blue-700 flex-1 truncate">{news.title}</p>
+                                        <p className="text-gray-800 font-bold group-hover:text-blue-700 flex-1 truncate text-left">{news.title}</p>
                                         <i data-lucide="chevron-right" className="hidden sm:block w-5 h-5 text-gray-300 group-hover:text-blue-600 ml-4 transition-transform group-hover:translate-x-1"></i>
                                     </a>
                                 ))}
@@ -208,16 +251,16 @@
                                 </p>
                             </div>
                             <div>
-                                <h4 className="font-bold text-lg mb-6 text-amber-400 border-l-4 border-amber-400 pl-3">校務系統連結</h4>
-                                <div className="space-y-4 text-blue-100/80">
+                                <h4 className="font-bold text-lg mb-6 text-amber-400 border-l-4 border-amber-400 pl-3">校務連結</h4>
+                                <div className="space-y-4 text-blue-100/80 text-sm font-medium">
                                     <a href={JUNIOR_GRADES_URL} target="_blank" className="block hover:text-white hover:translate-x-1 transition-all">國中成績查詢系統</a>
                                     <a href={HANLIN_CLOUD_URL} target="_blank" className="block hover:text-white hover:translate-x-1 transition-all">翰林雲端學習平台</a>
-                                    <a href={SCHOOL_URL} target="_blank" className="block hover:text-white hover:translate-x-1 transition-all">君毅中學官方網站</a>
+                                    <a href={SCHOOL_URL} target="_blank" className="block hover:text-white hover:translate-x-1 transition-all">君毅高級中學首頁</a>
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold text-lg mb-6 text-amber-400 border-l-4 border-amber-400 pl-3">聯絡我們</h4>
-                                <div className="space-y-4 text-sm text-blue-100/80">
+                                <h4 className="font-bold text-lg mb-6 text-amber-400 border-l-4 border-amber-400 pl-3 text-left">聯絡我們</h4>
+                                <div className="space-y-4 text-sm text-blue-100/80 text-left">
                                     <p className="flex items-start">
                                         <i data-lucide="map-pin" className="w-4 h-4 mr-3 mt-1 text-amber-400 flex-shrink-0"></i> 
                                         350 苗栗縣竹南鎮公義路245號
@@ -225,10 +268,6 @@
                                     <p className="flex items-center">
                                         <i data-lucide="phone" className="w-4 h-4 mr-3 text-amber-400 flex-shrink-0"></i> 
                                         教務處諮詢：037-622009 分機 202
-                                    </p>
-                                    <p className="flex items-center">
-                                        <i data-lucide="mail" className="w-4 h-4 mr-3 text-amber-400 flex-shrink-0"></i> 
-                                        office@cish.mlc.edu.tw
                                     </p>
                                 </div>
                             </div>
@@ -244,10 +283,8 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
-    <!-- 載入 Lucide 圖示庫腳本 -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        // 確保視窗載入後觸發圖示生成
         window.addEventListener('load', function() {
             if (window.lucide) {
                 window.lucide.createIcons();
