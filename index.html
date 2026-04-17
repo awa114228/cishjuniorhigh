@@ -1,271 +1,125 @@
-```react
-import React, { useState, useEffect } from 'react';
-import { 
-  Globe, 
-  Cpu, 
-  Award, 
-  ChevronRight, 
-  Menu, 
-  X, 
-  MapPin, 
-  Phone, 
-  Users, 
-  Star,
-  GraduationCap,
-  AlertCircle,
-  ExternalLink,
-  ClipboardCheck,
-  Navigation,
-  Megaphone,
-  Search,
-  Book,
-  Sparkles
-} from 'lucide-react';
+```html
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>君毅中學國中部 - 官方入口網站</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
 
-export default function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+        // 簡單的 Lucide 圖示元件模擬 (因為 HTML 版載入字體庫)
+        const Icon = ({ name, className = "w-5 h-5" }) => (
+            <i data-lucide={name} className={`${className} inline-block`}></i>
+        );
 
-  // 平滑滾動功能
-  const scrollToSection = (e, id) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      const headerOffset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        function App() {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
-    }
-    if (isMenuOpen) setIsMenuOpen(false);
-  };
+            useEffect(() => {
+                // 初始化圖示
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [isMenuOpen]);
 
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [isMenuOpen]);
+            const SCHOOL_URL = "https://www.cish.mlc.edu.tw/";
+            const ADMISSION_URL = "https://sites.google.com/mail.cish.mlc.edu.tw/elementary-student/";
 
-  // 配置鏈結
-  const SCHOOL_URL = "https://www.cish.mlc.edu.tw/";
-  const JUNIOR_GRADES_URL = "https://school.cish.mlc.edu.tw/online_jnr/";
-  const HANLIN_CLOUD_URL = "https://chun-i.teams.com.tw/v2/login.html";
-  const ADMISSION_URL = "https://sites.google.com/mail.cish.mlc.edu.tw/elementary-student/";
+            return (
+                <div className="min-h-screen bg-white text-gray-900">
+                    {/* 導覽列 */}
+                    <nav className="fixed w-full bg-white/95 backdrop-blur-md shadow-sm z-50 border-b border-gray-100">
+                        <div className="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+                            <div className="flex items-center">
+                                <div className="text-blue-800"><i data-lucide="graduation-cap" className="w-10 h-10"></i></div>
+                                <div className="ml-3">
+                                    <span className="block text-xl font-bold text-blue-900">君毅中學 <span className="text-blue-600">國中部</span></span>
+                                    <span className="block text-[10px] text-gray-400 uppercase tracking-widest">Junior High School</span>
+                                </div>
+                            </div>
+                            <div className="hidden md:flex items-center space-x-6 font-bold">
+                                <a href="#features" className="text-gray-600 hover:text-blue-700">特色課程</a>
+                                <a href="#news" className="text-gray-600 hover:text-blue-700">最新公告</a>
+                                <a href={ADMISSION_URL} target="_blank" className="bg-blue-700 text-white px-6 py-2 rounded-full shadow-md">新生專區</a>
+                            </div>
+                            <div className="md:hidden">
+                                <button onClick={() => setIsMenuOpen(!isMenuOpen)}><i data-lucide="menu" className="w-8 h-8"></i></button>
+                            </div>
+                        </div>
+                    </nav>
 
-  // 手機版選單結構
-  const menuCategories = [
-    {
-      category: "頁面導航",
-      items: [
-        { name: "特色課程介紹", icon: <Sparkles className="w-5 h-5" />, id: "features" },
-        { name: "國中最新公告", icon: <Megaphone className="w-5 h-5" />, id: "news" },
-        { name: "學校首頁", icon: <Globe className="w-5 h-5" />, url: SCHOOL_URL },
-      ]
-    },
-    {
-      category: "系統服務",
-      items: [
-        { name: "國中成績查詢", icon: <Search className="w-5 h-5" />, url: JUNIOR_GRADES_URL },
-        { name: "翰林雲端學院", icon: <Book className="w-5 h-5" />, url: HANLIN_CLOUD_URL },
-      ]
-    }
-  ];
+                    {/* Hero Section */}
+                    <section className="relative pt-32 pb-20 bg-blue-900 text-white">
+                        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center">
+                            <div className="md:w-3/5 text-center md:text-left mb-12">
+                                <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight">
+                                    成就未來的<br /><span className="text-amber-400">卓越起跑點</span>
+                                </h1>
+                                <p className="text-lg text-blue-100 mb-10 max-w-xl">苗栗君毅國中部，深耕品格教育與科技特色，為孩子打造具競爭力的學習環境。</p>
+                                <a href={ADMISSION_URL} target="_blank" className="bg-amber-400 text-blue-950 px-8 py-4 rounded-full font-black text-lg shadow-xl">國中新生報名</a>
+                            </div>
+                            <div className="md:w-2/5 w-full">
+                                <div className="relative aspect-video bg-blue-800/40 rounded-3xl border-2 border-white/10 flex items-center justify-center">
+                                    <i data-lucide="award" className="w-24 h-24 text-blue-300/20"></i>
+                                    <div className="absolute bottom-6 left-6 right-6 bg-white/95 p-4 rounded-2xl shadow-lg border border-white/50">
+                                        <div className="flex items-center text-blue-900">
+                                            <i data-lucide="clipboard-check" className="w-6 h-6 text-amber-500 mr-3 flex-shrink-0"></i>
+                                            <span className="font-bold text-base sm:text-lg">國中會考錄取成效斐然</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
-  // 公告範例數據
-  const newsList = [
-    { id: 1, date: '2026-04-12', title: '【重要】115學年度國一新生入學測驗成績查詢與報到說明', type: '招生', color: 'bg-red-100 text-red-700' },
-    { id: 2, date: '2026-04-10', title: '【榮譽】本校國中部參加 115 年苗栗縣語文競賽榮獲多項特優', type: '榮譽', color: 'bg-amber-100 text-amber-700' },
-    { id: 3, date: '2026-03-25', title: '【教學】115 學年度國中部外師英語成長營活動花絮', type: '活動', color: 'bg-blue-100 text-blue-700' },
-    { id: 4, date: '2026-03-15', title: '【輔導】國三會考衝刺營：專業名師考前大解密專題講座', type: '輔導', color: 'bg-green-100 text-green-700' },
-  ];
-
-  return (
-    <div className="min-h-screen bg-white font-sans text-gray-900">
-      {/* 導覽列 */}
-      <nav className="fixed w-full bg-white/95 backdrop-blur-md shadow-sm z-50 border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-20">
-            <div className="flex items-center">
-              <GraduationCap className="h-10 w-10 text-blue-800" />
-              <div className="ml-3">
-                <span className="block text-xl font-bold text-blue-900 tracking-tight">君毅中學 <span className="text-blue-600">國中部</span></span>
-                <span className="block text-[10px] text-gray-400 uppercase tracking-widest">Junior High School</span>
-              </div>
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-6">
-              <button onClick={(e) => scrollToSection(e, 'features')} className="text-gray-600 hover:text-blue-700 font-bold transition-colors">特色課程</button>
-              <button onClick={(e) => scrollToSection(e, 'news')} className="text-gray-600 hover:text-blue-700 font-bold transition-colors">最新公告</button>
-              <a href={SCHOOL_URL} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700 transition-colors flex items-center">
-                學校首頁 <ExternalLink className="w-4 h-4 ml-1 opacity-50" />
-              </a>
-              <a href={ADMISSION_URL} target="_blank" rel="noopener noreferrer" className="bg-blue-700 text-white px-6 py-2.5 rounded-full font-bold hover:bg-blue-800 shadow-md transition-all active:scale-95">
-                新生專區
-              </a>
-            </div>
-
-            <div className="md:hidden flex items-center">
-              <button onClick={toggleMenu} className="p-2 text-gray-600 focus:outline-none">
-                <Menu className="h-8 w-8" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* 手機版選單 */}
-      <div className={`fixed inset-0 z-[60] ${isMenuOpen ? 'visible' : 'invisible'}`}>
-        <div className={`absolute inset-0 bg-black/40 transition-opacity ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`} onClick={toggleMenu}></div>
-        <div className={`absolute right-0 top-0 h-full w-72 bg-white shadow-2xl transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-          <div className="p-6 flex justify-between items-center border-b">
-            <span className="font-bold text-blue-900">功能清單</span>
-            <button onClick={toggleMenu}><X className="w-6 h-6 text-gray-400" /></button>
-          </div>
-          <div className="p-4 space-y-6 overflow-y-auto h-[calc(100%-80px)]">
-            {menuCategories.map((cat, i) => (
-              <div key={i}>
-                <p className="text-xs font-bold text-gray-400 uppercase mb-3 px-2 tracking-widest">{cat.category}</p>
-                {cat.items.map((item, j) => (
-                  <button 
-                    key={j} 
-                    onClick={(e) => item.id ? scrollToSection(e, item.id) : window.open(item.url)}
-                    className="flex items-center w-full p-3 hover:bg-blue-50 rounded-xl text-gray-700 font-medium transition-colors mb-1"
-                  >
-                    <div className="mr-3 text-blue-600">{item.icon}</div>
-                    {item.name}
-                  </button>
-                ))}
-              </div>
-            ))}
-            <div className="pt-4">
-              <a href={ADMISSION_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full py-4 bg-blue-700 text-white font-bold rounded-2xl shadow-lg">
-                報名新生專區
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 bg-blue-900 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center">
-          <div className="md:w-3/5 text-center md:text-left mb-12 md:mb-0">
-            <h1 className="text-4xl sm:text-6xl font-black text-white mb-6 leading-tight">
-              成就未來的<br /><span className="text-amber-400">卓越起跑點</span>
-            </h1>
-            <p className="text-lg sm:text-xl text-blue-100 mb-10 max-w-xl">
-              深耕品格塑造、機器人特色課程與雙語教學，提供苗栗學子最優質的國中教育環境。
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-              <a href={ADMISSION_URL} target="_blank" rel="noopener noreferrer" className="bg-amber-400 text-blue-950 px-8 py-4 rounded-full font-black text-lg hover:bg-amber-300 transition-all shadow-xl active:scale-95">
-                國中新生報名
-              </a>
-              <button onClick={(e) => scrollToSection(e, 'features')} className="border-2 border-white/30 text-white px-8 py-4 rounded-full font-black text-lg hover:bg-white/10 transition-all">
-                了解教學特色
-              </button>
-            </div>
-          </div>
-          
-          {/* 右側展示卡片 - 已修正文字溢出問題 */}
-          <div className="md:w-2/5 w-full">
-            <div className="relative aspect-video bg-blue-800/40 rounded-3xl border-2 border-white/10 p-4 flex items-center justify-center shadow-2xl">
-              <Award className="w-24 h-24 text-blue-300/20" />
-              {/* 下方卡片使用 flex-wrap 與靈活寬度防止文字溢出 */}
-              <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-white/50">
-                <div className="flex items-center text-blue-900 overflow-hidden">
-                  <ClipboardCheck className="w-6 h-6 text-amber-500 mr-3 flex-shrink-0" />
-                  <span className="font-bold text-base sm:text-lg leading-snug">國中會考錄取成效斐然</span>
+                    {/* 公告 */}
+                    <section id="news" className="py-24">
+                        <div className="max-w-4xl mx-auto px-4">
+                            <div className="text-center mb-12">
+                                <h2 className="text-3xl font-black mb-4">最新公告</h2>
+                                <a href={SCHOOL_URL} target="_blank" className="text-blue-600 font-bold hover:underline flex justify-center items-center">
+                                    進入學校網站 <i data-lucide="external-link" className="w-4 h-4 ml-1"></i>
+                                </a>
+                            </div>
+                            <div className="space-y-4">
+                                {[
+                                    { date: '2026-04-12', title: '【重要】115學年度國一新生入學測驗成績查詢', type: '招生' },
+                                    { date: '2026-04-10', title: '【榮譽】本校國中部語文競賽榮獲多項特優', type: '榮譽' }
+                                ].map((news, i) => (
+                                    <div key={i} className="flex bg-gray-50 p-6 rounded-2xl hover:bg-blue-50 cursor-pointer">
+                                        <span className="text-gray-400 text-sm mr-4">{news.date}</span>
+                                        <span className="font-bold">{news.title}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* 背景裝飾 */}
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-800/30 -skew-x-12 translate-x-20 opacity-50"></div>
-      </section>
+            );
+        }
 
-      {/* 教學特色 */}
-      <section id="features" className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-blue-900 mb-4 tracking-tight">四大教學支柱</h2>
-            <div className="w-16 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { icon: <Globe />, title: "雙語菁英", desc: "外師口說與沉浸式英語環境。" },
-              { icon: <Cpu />, title: "機器人特色", desc: "全國賽常勝軍，科技扎根。" },
-              { icon: <Star />, title: "品格教育", desc: "生活禮儀與責任感全面培養。" },
-              { icon: <Users />, title: "適性輔導", desc: "專業升學輔導，拔尖扶弱。" }
-            ].map((f, i) => (
-              <div key={i} className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-all">
-                <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">{f.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{f.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 公告區塊 */}
-      <section id="news" className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="flex flex-col items-center mb-12">
-            <h2 className="text-3xl font-black text-gray-900 mb-4">最新公告與榮譽</h2>
-            <a href={SCHOOL_URL} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-600 font-bold hover:underline">
-              進入學校網站 <ExternalLink className="w-4 h-4 ml-1" />
-            </a>
-          </div>
-          <div className="space-y-4">
-            {newsList.map(news => (
-              <a key={news.id} href={SCHOOL_URL} target="_blank" rel="noopener noreferrer" className="flex flex-col sm:flex-row sm:items-center bg-gray-50 p-6 rounded-2xl hover:bg-blue-50 transition-colors group">
-                <div className="flex items-center mb-2 sm:mb-0 sm:mr-6">
-                  <span className="text-sm font-medium text-gray-400 w-24">{news.date}</span>
-                  <span className={`px-3 py-1 text-xs font-bold rounded-lg ${news.color}`}>{news.type}</span>
-                </div>
-                <p className="text-gray-800 font-bold group-hover:text-blue-700 flex-1">{news.title}</p>
-                <ChevronRight className="hidden sm:block w-5 h-5 text-gray-300 group-hover:text-blue-600 ml-4" />
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 頁尾 */}
-      <footer className="bg-blue-950 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div>
-            <div className="flex items-center mb-6">
-              <GraduationCap className="h-8 w-8 text-amber-400" />
-              <span className="ml-3 text-xl font-bold">君毅中學國中部</span>
-            </div>
-            <p className="text-blue-200/60 text-sm leading-relaxed">培育具備核心素養與國際視野的青年才俊，苗栗私校第一首選。</p>
-          </div>
-          <div>
-            <h4 className="font-bold text-lg mb-6 text-amber-400">系統連結</h4>
-            <div className="space-y-4">
-              <a href={JUNIOR_GRADES_URL} target="_blank" rel="noopener noreferrer" className="block text-blue-100 hover:text-white transition-colors">成績查詢系統</a>
-              <a href={HANLIN_CLOUD_URL} target="_blank" rel="noopener noreferrer" className="block text-blue-100 hover:text-white transition-colors">翰林雲端學院</a>
-            </div>
-          </div>
-          <div>
-            <h4 className="font-bold text-lg mb-6 text-amber-400">聯絡資訊</h4>
-            <div className="space-y-3 text-sm text-blue-100">
-              <p className="flex items-start"><MapPin className="w-4 h-4 mr-2 mt-1 flex-shrink-0" /> 350 苗栗縣竹南鎮公義路245號</p>
-              <p className="flex items-center"><Phone className="w-4 h-4 mr-2 flex-shrink-0" /> 037-622009 分機 202</p>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        window.onload = () => { lucide.createIcons(); };
+    </script>
+</body>
+</html>
 
 ```
